@@ -1,0 +1,7 @@
+- thumbnails
+
+
+font size bhot bra ha subtitles ka
+
+- for structured output for openai https://www.datacamp.com/tutorial/open-ai-structured-outputs
+- asyn run krlo kuch functions ta k jldi results ajaien

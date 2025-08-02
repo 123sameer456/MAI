@@ -1,0 +1,1234 @@
+{% extends "base.html" %}
+
+{% block title %}Home - ClipCraft Pro{% endblock title %}
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClipCraft Pro - Video Processing Studio</title> -->
+
+
+
+{% block style %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+    /* Modern Color Scheme and Base Styles */
+
+
+
+
+
+    :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #111827;
+            --darker: #0f172a;
+            --light: #f9fafb;
+            --gray: #9ca3af;
+            --card-bg:#3f4145;
+            --highlight: #8b5cf6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+     
+
+
+
+
+
+
+    /* Main Content Styles */
+    .content-section {
+        background-color: var(--darker);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .content-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    h1,
+    h2,
+    h3 {
+        color: var(--light);
+        margin-bottom: 20px;
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    h1::after,
+    h2::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 60px;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        border-radius: 5px;
+    }
+
+    /* Form Section */
+    .upload-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--light);
+    }
+
+    textarea,
+    input[type="file"] {
+        width: 100%;
+        padding: 12px 15px;
+        background-color: var(--card-bg);
+        border: 1px solid #2d3748;
+        border-radius: 8px;
+        color: var(--light);
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+
+    textarea:focus,
+    input[type="file"]:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    /* Custom File Input */
+    .file-input-container {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 20px;
+        background: var(--card-bg);
+        color: var(--light);
+        border: 2px dashed #4b5563;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.3s;
+        height: 120px;
+    }
+
+    .file-input-label:hover {
+        border-color: var(--primary);
+        background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .file-input-label i {
+        font-size: 24px;
+        margin-right: 10px;
+        color: var(--primary);
+    }
+
+    .file-input-label.has-file {
+        border-color: var(--secondary);
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .file-name {
+        margin-top: 5px;
+        font-size: 13px;
+        color: var(--gray);
+        word-break: break-all;
+    }
+
+    input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    /* Button Styles */
+    .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        font-size: 16px;
+        box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    }
+
+    .btn-secondary {
+        background: linear-gradient(to right, var(--secondary), #059669);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 14px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 5px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-block {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    /* Output Section */
+    .output-section {
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+
+    .output-section.active {
+        opacity: 1;
+        max-height: 2000px;
+        margin-top: 30px;
+    }
+
+    .tab-container {
+        margin-bottom: 30px;
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 2px solid #374151;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        position: relative;
+        font-weight: 500;
+        color: var(--gray);
+        transition: all 0.3s;
+    }
+
+    .tab.active {
+        color: var(--primary);
+    }
+
+    .tab::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .tab.active::after {
+        transform: scaleX(1);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Card and Slider Styles */
+    .slider-title {
+        font-size: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .slider-title i {
+        margin-right: 10px;
+        color: var(--primary);
+    }
+
+    .slider {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px;
+        padding: 10px 0 20px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--dark);
+    }
+
+    .slider::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .slider::-webkit-scrollbar-track {
+        background: var(--dark);
+        border-radius: 10px;
+    }
+
+    .slider::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+        border-radius: 10px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 10px;
+        min-width: 300px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary), var(--highlight));
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .card strong {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--light);
+    }
+
+    .card p {
+        color: var(--gray);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Video Card Styling */
+    .video-card {
+        position: relative;
+        min-width: 320px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-card video {
+        width: 100%;
+        display: block;
+        border-radius: 10px;
+    }
+
+    .video-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        pointer-events: none;
+    }
+
+    /* Loading Animation */
+    .processing-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+    }
+
+    .processing-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .spinner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid transparent;
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .processing-text {
+        color: white;
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .processing-step {
+        color: var(--gray);
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    /* Progress Bar Styles */
+    .progress-container {
+        width: 80%;
+        max-width: 400px;
+        margin-top: 15px;
+        position: relative;
+    }
+
+    .progress-bar {
+        height: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        width: 0%;
+        transition: width 0.5s ease;
+        border-radius: 5px;
+    }
+
+    .progress-percentage {
+        text-align: center;
+        color: white;
+        font-size: 14px;
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    .nav {
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        margin-top: 10px;
+        /* Optional spacing */
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .upload-section {
+            grid-template-columns: 1fr;
+        }
+
+        .card,
+        .video-card {
+            min-width: 250px;
+        }
+
+
+
+        .progress-container {
+            width: 90%;
+        }
+    }
+</style>
+{% endblock style %}
+
+</head>
+{% block content %}
+
+<body>
+    <!-- Processing Overlay -->
+    <!-- Enhanced Processing Overlay HTML -->
+    <div id="processingOverlay" class="processing-overlay">
+        <div class="processing-content">
+            <div class="processing-animation">
+                <div class="spinner"></div>
+            </div>
+
+            <h3>Processing Your Video</h3>
+            <p id="processingStep">Starting processing...</p>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="progressPercentage" class="progress-percentage">0%</div>
+            </div>
+
+            <!-- User Message -->
+            <div class="user-message">
+                <div class="message-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="message-text">
+                    <p><strong>Processing may take 10-30 minutes</strong></p>
+                    <p>You can minimize this window, but please <strong>don't close this browser tab</strong>.
+                        We'll automatically redirect you to the results page once processing is complete.</p>
+                </div>
+            </div>
+
+            <div class="processing-tips">
+                <p><i class="fas fa-lightbulb"></i> Feel free to use other tabs while we work on your video!</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .processing-overlay.active {
+            display: flex;
+        }
+
+        .processing-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .processing-animation {
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .processing-content h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        #processingStep {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+            min-height: 20px;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .progress-percentage {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .user-message {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            display: flex;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .message-icon {
+            color: #007bff;
+            font-size: 24px;
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+
+        .message-text p {
+            margin: 0 0 10px 0;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .message-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .processing-tips {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 15px;
+            color: #0c5460;
+            font-size: 14px;
+        }
+
+        .processing-tips i {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .processing-content {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .user-message {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .message-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* CSS */
+
+
+        .button-63:active,
+        .button-63:hover {
+            outline: 0;
+        }
+
+        @media (min-width: 768px) {
+            .button-63 {
+                font-size: 24px;
+                min-width: 196px;
+            }
+        }
+    </style>
+    <style>
+        /* Modal Overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        /* Modal Content Container */
+        .modal-content {
+            background: linear-gradient(135deg, var(--card-bg) 0%, #4a4d52 100%);
+            margin: 5% auto;
+            padding: 0;
+            border: none;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Close Button */
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--gray);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.1);
+        }
+
+        /* Form Group */
+        .form-group {
+            padding: 40px 30px 30px;
+            background: transparent;
+        }
+
+        /* Label Styling */
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #e5e7eb !important;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label b {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* Textarea Styling */
+        #titleDescriptionMsg {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(17, 24, 39, 0.6);
+            color: #f9fafb;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            backdrop-filter: blur(8px);
+        }
+
+        #titleDescriptionMsg:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(17, 24, 39, 0.8);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        #titleDescriptionMsg::placeholder {
+            color: var(--gray);
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+        /* Scrollbar Styling for Textarea */
+        #titleDescriptionMsg::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #titleDescriptionMsg::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        #titleDescriptionMsg::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        #titleDescriptionMsg::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                border-radius: 12px;
+            }
+
+            .form-group {
+                padding: 30px 20px 25px;
+            }
+
+            .form-group label {
+                font-size: 15px;
+            }
+
+            #titleDescriptionMsg {
+                min-height: 100px;
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+
+            .close {
+                right: 15px;
+                top: 15px;
+                width: 35px;
+                height: 35px;
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 98%;
+                margin: 15% auto;
+            }
+
+            .form-group {
+                padding: 25px 15px 20px;
+            }
+
+            .form-group label {
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+
+            #titleDescriptionMsg {
+                min-height: 90px;
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+        }
+    </style>
+
+    <!-- Header -->
+
+
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="content-section">
+            <h1>Create Professional Video Content</h1>
+            <form action="/" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-section">
+                    <div class="form-group">
+                        <label for="video">Upload Your Video</label>
+                        
+                            
+                            
+                       
+                        <!-- --------------------- -->
+                        <div class="file-input-container">
+                            <label class="file-input-label" id="fileInputLabel">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <div id="uploadText">
+                                    <div style="color:white;">Drag & drop your video here</div>
+                                    <div style="font-size: 12px; color: var(--gray);">or click to browse</div>
+                                </div>
+                            </label>
+                            <input type="file" name="video" id="videoInput" accept="video/*" required>
+                            <div class="file-name" id="fileName"></div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button type="button" style="background-image: linear-gradient(144deg, #dcbef1, #a69bec 50%, #a9d9f0) ; "
+                    class="btn btn-block button-sys-msg" onclick="openModalSystemMessage()">Add System Messages</button>
+
+                <button type="submit" class="btn btn-primary btn-block" id="processBtn">
+                    <i class="fas fa-magic"></i> Process Video
+                </button>
+            </form>
+            <div id="sysMsgModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+
+                    <div class="form-group">
+                        <label for="title_description_msg" style="color:rgb(75, 67, 67);"><b>(Optional)</b> Tone & Style
+                            | Emojis | Title | Caption | CTA | Hashtags Instructions for <b>Serious & Entertainment
+                                Platforms</b></label>
+                        <textarea name="title_description_msg" id="titleDescriptionMsg" rows="3"
+                            placeholder="Instructions for titles and captions (Optional) or Leave it Blank AI Agent will make its own by Analyzing Video"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+
+
+        <!-- Titles & Captions Tab -->
+
+        <!-- Video Clips Tab -->
+
+        <!-- Video Subtitle Tab -->
+
+        <!-- Hook Videos Tab -->
+
+        {% if title_caption_data or created_clips or hook_clips or subtitle_clips %}
+        <h1>content generated please check preview page</h1>
+        {% endif %}
+
+    </div>
+
+    <footer>
+        <p>ClipCraft Pro &copy; 2025 | Transform your video content effortlessly</p>
+    </footer>
+
+    <script>
+        function openModalSystemMessage() {
+            document.getElementById("sysMsgModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("sysMsgModal").style.display = "none";
+        }
+
+        // Optional: Close modal when clicking outside of modal-content
+        window.onclick = function (event) {
+            const modal = document.getElementById("sysMsgModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
+
+    <script>
+
+
+
+        // Enhanced JavaScript for real progress tracking with user message
+        const form = document.getElementById('uploadForm');
+        const processingOverlay = document.getElementById('processingOverlay');
+        const processingStep = document.getElementById('processingStep');
+        const progressFill = document.getElementById('progressFill');
+        const progressPercentage = document.getElementById('progressPercentage');
+        const videoInput = document.getElementById('videoInput');
+
+        let progressInterval;
+        let currentProgress = 0; // Track current progress to prevent going backwards
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            if (videoInput.files.length > 0) {
+                console.log('Starting video processing...');
+                processingOverlay.classList.add('active');
+
+                // Reset progress
+                currentProgress = 0;
+                updateProgressDisplay(0, 'Starting processing...');
+
+                // Create FormData for file upload
+                const formData = new FormData(form);
+
+                // Submit form via AJAX
+                fetch('/', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Server response:', data);
+                        if (data.task_id) {
+                            console.log('Task ID received:', data.task_id);
+                            // Start polling for progress
+                            pollProgress(data.task_id);
+                        } else if (data.error) {
+                            throw new Error(data.error);
+                        } else {
+                            throw new Error('No task ID received');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        processingOverlay.classList.remove('active');
+                        alert('Error starting video processing: ' + error.message);
+                    });
+            } else {
+                alert('Please select a video file first');
+            }
+        });
+
+        function updateProgressDisplay(progress, step) {
+            // Only update if progress is moving forward
+            if (progress >= currentProgress) {
+                currentProgress = progress;
+                progressFill.style.width = progress + '%';
+                progressPercentage.textContent = progress + '%';
+                processingStep.textContent = step || 'Processing...';
+                console.log(`Progress updated to: ${progress}% - ${step}`);
+            } else {
+                console.log(`Progress not updated: ${progress}% <= ${currentProgress}%`);
+            }
+        }
+
+        function pollProgress(taskId) {
+            console.log('Starting progress polling for task:', taskId);
+
+            // Clear any existing interval
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+
+            progressInterval = setInterval(() => {
+                console.log('Polling progress for task:', taskId);
+                fetch(`/progress/${taskId}`)
+                    .then(response => {
+                        console.log('Progress response status:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Progress data received:', JSON.stringify(data, null, 2));
+
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        // Update progress display (only if moving forward)
+                        const progress = data.progress || 0;
+                        updateProgressDisplay(progress, data.step);
+
+                        // Check completion status - Fixed logic
+                        console.log('Checking status:', data.status, 'Progress:', progress);
+
+                        if (data.status === 'completed' || (progress >= 100 && data.status !== 'error')) {
+                            console.log('Task completed! Redirecting...');
+                            clearInterval(progressInterval);
+
+                            // Update to 100% if not already
+                            updateProgressDisplay(100, 'Complete!');
+
+                            // Add a small delay to show completion
+                            setTimeout(() => {
+                                console.log(`Redirecting to: /results/${taskId}`);
+                                window.location.href = `/results/${taskId}`;
+                            }, 1500);
+
+                        } else if (data.status === 'error') {
+                            console.log('Task failed:', data.error);
+                            clearInterval(progressInterval);
+                            processingOverlay.classList.remove('active');
+                            alert('Error processing video: ' + (data.error || 'Unknown error'));
+                        } else {
+                            console.log('Task still processing...', data.status, progress + '%');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error polling progress:', error);
+                        clearInterval(progressInterval);
+                        processingOverlay.classList.remove('active');
+                        alert('Error checking progress: ' + error.message);
+                    });
+            }, 2000); // Reduced to 2 seconds for faster completion detection
+        }
+
+        // Prevent page unload during processing
+        window.addEventListener('beforeunload', function (e) {
+            if (progressInterval && currentProgress < 100) {
+                e.preventDefault();
+                e.returnValue = 'Video processing is in progress. If you leave now, you may lose your progress.';
+                return e.returnValue;
+            }
+        });
+
+        // File Input Handler
+        const fileInputLabel = document.getElementById('fileInputLabel');
+        const fileName = document.getElementById('fileName');
+        const uploadText = document.getElementById('uploadText');
+
+        videoInput.addEventListener('change', function (e) {
+            if (this.files && this.files.length > 0) {
+                fileName.textContent = this.files[0].name;
+                fileInputLabel.classList.add('has-file');
+                uploadText.innerHTML = '<i class="fas fa-check"></i> Video selected';
+            } else {
+                fileName.textContent = '';
+                fileInputLabel.classList.remove('has-file');
+                uploadText.innerHTML = '<div>Drag & drop your video here</div><div style="font-size: 12px; color: var(--gray);">or click to browse</div>';
+            }
+        });
+
+    </script>
+
+    <script>
+        // emojis function
+        function insertEmoji(emoji) {
+            const textarea = document.getElementById('titleDescriptionMsg');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + emoji + textarea.value.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+            textarea.focus();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emoji-mart/5.5.2/emoji-mart.min.js"></script>
+
+    <script>
+        // emojis
+
+
+        <div class="emoji-picker-container" id="emojiPickerContainer"></div>
+
+
+        const picker = new EmojiMart.Picker({
+            onEmojiSelect: (emoji) => {
+                insertEmoji(emoji.native);
+            }
+        });
+        document.getElementById('emojiPickerContainer').appendChild(picker);
+    </script>
+
+</body>
+{% endblock content %}
+
+</html>

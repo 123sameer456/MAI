@@ -1,0 +1,890 @@
+{% extends "base.html" %}
+{% block title %}Voice Creator - ClipCraft Pro{% endblock title %}
+
+
+
+
+{% block style %}
+    <style>
+         :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #111827;
+            --darker: #0f172a;
+            --light: #f9fafb;
+            --gray: #9ca3af;
+            --card-bg:#3f4145;
+            --highlight: #8b5cf6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .platform-selector {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+
+        #platformSelect {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            background: white;
+            cursor: pointer;
+            min-width: 250px;
+        }
+
+        .cards-container {
+            display: none;
+            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .cards-container.active {
+            display: grid;
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #007bff;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .canvas-container {
+            display: none;
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .canvas-container.active {
+            display: block;
+        }
+
+        .canvas {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 2px dashed #dee2e6;
+            min-height: 200px;
+        }
+
+        .platform-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thread-btn { background: #000; color: white; }
+        .linkedin-btn { background: #0077b5; color: white; }
+        .tiktok-btn { background: #ff0050; color: white; }
+        .facebook-btn { background: #1877f2; color: white; }
+        .youtube-btn { background: #ff0000; color: white; }
+        .instagram-btn { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+
+        .platform-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 90%;
+        }
+
+        .close {
+            float: right;
+            font-size: 30px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .gallery-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .gallery-item .content {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .gallery-item .hashtags {
+            color: #007bff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .select-btn {
+            background: var(--primary);
+             
+            
+            color: rgb(255, 255, 255);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .select-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .select-btn.selected {
+            background: #007bff;
+        }
+
+        .canvas-caption, .canvas-video {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+        }
+
+        .canvas-caption h4, .canvas-video h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .canvas-caption .content, .canvas-video p {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .canvas-caption .hashtags {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        #emptyState {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 50px;
+        }
+
+        .refresh-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #138496;
+            transform: scale(1.05);
+        }
+
+        div.card p , div.modal-content  h2 ,div.canvas h3{
+            color : black;
+        }
+
+
+     [contenteditable="true"] {
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+  cursor: text;
+}
+
+/* Hover: show subtle border */
+[contenteditable="true"]:hover {
+  border: 1px dashed #666;
+  border-radius: 4px;
+}
+
+/* Focus: show solid black border */
+[contenteditable="true"]:focus {
+  border: 2px solid black;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: #f9f9f9; /* Optional: light background when editing */
+}
+
+    </style>
+</head>
+
+{% endblock style %}
+
+{% block content %}
+<body>  
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Social Media Content Manager</h1>
+            <p>Create amazing content for your social media platforms</p>
+            <!-- <button class="refresh-btn" onclick="refreshContent()">🔄 Refresh Content</button> -->
+        </div>
+
+        <div class="platform-selector">
+            <select id="platformSelect">
+                <option value="">Select Platform</option>
+                <option value="serious">Serious Platform</option>
+                <option value="entertainment">Entertainment Platform</option>
+            </select>
+        </div>
+
+        <div id="seriousCards" class="cards-container">
+            <div class="card" onclick="openModal('captionModal')">
+                <h3>📝 Serious Platform Captions</h3>
+                <p>Professional captions for LinkedIn, Twitter, and business content</p>
+            </div>
+            <div class="card" onclick="openModal('hooksModal')">
+                <h3>🎯 Serious Platform Hooks</h3>
+                <p>Engaging hooks to capture professional audience attention</p>
+            </div>
+            <div class="card" onclick="openModal('shortVideosModal')">
+                <h3>🎬 Serious Platform Short Videos</h3>
+                <p>Professional short-form video content</p>
+            </div>
+             <div class="card" onclick="openModal('clipsWithSubtitlesModal')" >
+                <h3>📱 Serious Platform Short Videos With SubTitles</h3>
+                <p>Trending short-form Serious content</p>
+            </div>
+        </div>
+
+        <div id="entertainmentCards" class="cards-container">
+            <div class="card" onclick="openModal('captionModal')">
+                <h3>🎉 Entertainment Platform Captions</h3>
+                <p>Fun and engaging captions for TikTok, Instagram, and Facebook</p>
+            </div>
+            <div class="card" onclick="openModal('hooksModal')">
+                <h3>⚡ Entertainment Platform Hooks</h3>
+                <p>Viral hooks to grab entertainment audience attention</p>
+            </div>
+            <div class="card" onclick="openModal('shortVideosModal')">
+                <h3>📱 Entertainment Platform Short Videos</h3>
+                <p>Trending short-form entertainment content</p>
+            </div>
+            <div class="card" onclick="openModal('clipsWithSubtitlesModal')" >
+                <h3>📱 Entertainment Platform Short Videos With SubTitles</h3>
+                <p>Trending short-form entertainment content</p>
+            </div>
+        </div> 
+
+        <div id="canvasContainer" class="canvas-container">
+            <div class="canvas">
+                <h3>📋 Content Preview</h3>
+                <div id="selectedCaption"></div>
+                <div id="selectedVideo"></div>
+                <div id="emptyState">
+                    Select content from the galleries above to preview here
+                </div>
+            </div>
+            <h1  class="platform-btn" style="color:rgb(0, 0, 0);">Post On </h1>
+            <div class="platform-buttons">
+                <div id="seriousButtons" style="display: none;">
+                    <button class="platform-btn thread-btn" onclick="shareToThreads()">Thread</button>
+                    <button class="platform-btn linkedin-btn" onclick="shareToLinkedIn()">LinkedIn</button>
+                </div>
+                <div id="entertainmentButtons" style="display: none;">
+                    
+                    <button class="platform-btn tiktok-btn" onclick="shareToTikTok()">TikTok</button>
+                    <button class="platform-btn facebook-btn" onclick="shareToFacebook()">Facebook</button>
+                    <button class="platform-btn youtube-btn" onclick="shareToYouTube()">YouTube</button>
+                    <button class="platform-btn instagram-btn" onclick="shareToInstagram()">Instagram</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Caption Modal -->  
+    <div id="captionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('captionModal')">&times;</span>
+            <h2>📝 Caption Gallery</h2>
+            <div class="gallery-grid" id="captionGallery">
+                <!-- Caption items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Hooks Modal -->
+    <div id="hooksModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('hooksModal')">&times;</span>
+            <h2>🎯 Hooks Gallery</h2>
+            <div class="gallery-grid" id="hooksGallery">
+                <!-- Hook video items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Short Videos Modal -->
+    <div id="shortVideosModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('shortVideosModal')">&times;</span>
+            <h2>🎬 Short Videos Gallery</h2>
+            <div class="gallery-grid" id="shortVideosGallery">
+                <!-- Short video items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Clips with Subtitles Modal -->
+    <div id="clipsWithSubtitlesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('clipsWithSubtitlesModal')">&times;</span>
+            <h2>🎬📝 Clips with Subtitles Gallery</h2>
+            <div class="gallery-grid" id="clipsWithSubtitlesGallery">
+                <!-- Clips with subtitles video items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    
+    
+
+    <script>
+        let selectedCaption = null;
+        let selectedVideo = null;
+        let currentPlatform = '';
+        let captions = [];
+        let jsonData = [];
+        let hooksVideos = [];
+        let clipsVideos = [];
+        let clipsWithSubtitlesVideos = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+          loadVideosFromServer();
+            });
+
+        // Function to load videos from server
+        async function loadVideosFromServer() {
+            try {
+                // Load hooks videos
+                const hooksResponse = await fetch('/api/videos/hooks');
+                const hooksData = await hooksResponse.json();
+                hooksVideos = hooksData.videos || [];
+                
+                // Load clips videos
+                const clipsResponse = await fetch('/api/videos/clips');
+                const clipsData = await clipsResponse.json();
+                clipsVideos = clipsData.videos || [];
+                
+                // Load clips with subtitles videos
+                const clipsWithSubtitlesResponse = await fetch('/api/videos/clips_with_subtitles');
+                const clipsWithSubtitlesData = await clipsWithSubtitlesResponse.json();
+                clipsWithSubtitlesVideos = clipsWithSubtitlesData.videos || [];
+                
+                console.log('Hooks videos loaded:', hooksVideos.length);
+                console.log('Clips videos loaded:', clipsVideos.length);
+                console.log('Clips with subtitles videos loaded:', clipsWithSubtitlesVideos.length);
+                
+            } catch (error) {
+                console.error('Error loading videos:', error);
+                hooksVideos = [];
+                clipsVideos = [];
+                clipsWithSubtitlesVideo
+                s = [];
+            }
+        }
+
+
+        // Initialize with sample data (in your Flask app, replace this with: const jsonData = {{ caption_data | tojson }};)
+        async function loadContentData() {
+            // In your Flask template, replace this entire function with just:
+            jsonData = {{ caption_data | tojson }};
+            
+            // Sample data for demo purposes
+            // jsonData = [
+            //     {
+            //         "serious-platform-title": "Understanding ",
+            //         "serious-platform-caption": "Discover the key differences between the wealthy and the poor mindset. The first difference: rich people think big, while poor people think small. Are you prioritizing savings over opportunities? Let's discuss the impact of your mindset on success. #WealthMindset #Success #Mindset",
+            //         "entertainment-platform-title": "💰 Secrets of the Millionaire Mind! 📚",
+            //         "entertainment-platform-caption": "Today, we're diving into 'Secrets of the Millionaire Mind'! 💡 Did you know rich people think big while poor people think small? 🛒 Take a moment to reflect on your shopping habits! 👀 #WealthMindset #SuccessTips #PersonalGrowth"
+            //     },
+            //     {
+            //         "serious-platform-title": "The Value of Results Over Time",
+            //         "serious-platform-caption": "In the pursuit of success, focus on results rather than time invested. The second difference between rich and poor is that rich people choose to get paid based on results, not effort. Let your work speak for itself. #Results #Success #Performance",
+            //         "entertainment-platform-title": "🚀 Focus on Results, Not Just Effort! 🌟",
+            //         "entertainment-platform-caption": "It's time to shift your thinking! Rich people care about results, not just hard work. 💪 When was the last time you evaluated your output? 🎯 #ResultsDriven #WealthyMindset #Motivation"
+            //     },
+            //     {
+            //         "serious-platform-title": "Know Your Value: Focus on Results",
+            //         "serious-platform-caption": "Your true value comes from the results you deliver, not the salary you receive. Rich people understand this distinction and embrace opportunities. Poor people often cling to security instead. Which mindset do you resonate with? #Value #Opportunities #Growth",
+            //         "entertainment-platform-title": "💡 Know Your Worth: Results Over Salary! 💸",
+            //         "entertainment-platform-caption": "Rich people work for results, not just a paycheck! 💼 Keep an eye on opportunities and break away from the salary trap! What's your experience? 👇 #MindsetShift #Opportunities #Success"
+            //     }
+            // ];
+            
+            console.log('Content data loaded:', jsonData);
+         }
+
+        
+
+        // Function to load captions based on selected platform
+        // Function to load captions based on selected platform
+    function loadCaptions(platform) {
+        captions = [];
+        
+            // Safety check - ensure jsonData exists and is an array
+            if (!jsonData) {
+                console.error('jsonData is not defined');
+                return;
+                            }
+        
+            // If jsonData is a string, try to parse it
+            if (typeof jsonData === 'string') {     
+                try {
+                    jsonData = JSON.parse(jsonData);
+                } catch (e) {
+                    console.error('Error parsing jsonData:', e);
+                    return;
+                }
+                                        }
+    
+            // Ensure jsonData is an array
+            if (!Array.isArray(jsonData)) {
+                console.error('jsonData is not an array:', typeof jsonData, jsonData);
+                return;
+            }
+    
+            if (platform === 'serious') {
+                jsonData.forEach((item, index) => {
+                    if (item['serious-platform-title'] && item['serious-platform-caption']) {
+                        const captionText = item['serious-platform-caption'];
+                        const hashtagIndex = captionText.indexOf('#');
+                        
+                        captions.push({
+                            id: index + 1,
+                            heading: item['serious-platform-title'],
+                            content: hashtagIndex !== -1 ? captionText.substring(0, hashtagIndex).trim() : captionText,
+                            hashtags: hashtagIndex !== -1 ? captionText.substring(hashtagIndex) : ''
+                        });
+                    }
+                });
+            } else if (platform === 'entertainment') {
+                jsonData.forEach((item, index) => {
+                    if (item['entertainment-platform-title'] && item['entertainment-platform-caption']) {
+                        const captionText = item['entertainment-platform-caption'];
+                        const hashtagIndex = captionText.indexOf('#');
+                        
+                        captions.push({
+                            id: index + 1,
+                            heading: item['entertainment-platform-title'],
+                            content: hashtagIndex !== -1 ? captionText.substring(0, hashtagIndex).trim() : captionText,
+                            hashtags: hashtagIndex !== -1 ? captionText.substring(hashtagIndex) : ''
+                        });
+                    }
+                });
+            }
+    
+            console.log(`Loaded ${captions.length} captions for ${platform} platform:`, captions);
+}
+
+        // Sample videos data
+        const videos = [
+            {
+                id: 1,
+                title: "Professional Development Tips",
+                description: "Key strategies for career advancement and leadership growth"
+            },
+            {
+                id: 2,
+                title: "Industry Trends 2024",
+                description: "What to watch in the coming year for business success"
+            },
+            {
+                id: 3,
+                title: "Leadership Masterclass",
+                description: "Essential skills for modern leaders and team builders"
+            },
+            {
+                id: 4,
+                title: "Fun Office Moments",
+                description: "Behind the scenes workplace humor and team bonding"
+            },
+            {
+                id: 5,
+                title: "Weekend Adventures",
+                description: "Making the most of your free time and work-life balance"
+            }
+        ];
+
+        // Platform selection handler
+        document.getElementById('platformSelect').addEventListener('change', function() {
+            const platform = this.value;
+            currentPlatform = platform;
+            
+            console.log('Platform selected:', platform);
+            
+            // Load captions based on selected platform
+            if (platform) {
+                loadCaptions(platform);
+            }
+            
+            // Hide all cards
+            document.getElementById('seriousCards').classList.remove('active');
+            document.getElementById('entertainmentCards').classList.remove('active');
+            
+            // Show canvas if platform is selected
+            if (platform) {
+                document.getElementById('canvasContainer').classList.add('active');
+                
+                if (platform === 'serious') {
+                    document.getElementById('seriousCards').classList.add('active');
+                    document.getElementById('seriousButtons').style.display = 'block';
+                    document.getElementById('entertainmentButtons').style.display = 'none';
+                } else if (platform === 'entertainment') {
+                    document.getElementById('entertainmentCards').classList.add('active');
+                    document.getElementById('entertainmentButtons').style.display = 'block';
+                    document.getElementById('seriousButtons').style.display = 'none';
+                }
+            } else {
+                document.getElementById('canvasContainer').classList.remove('active');
+                captions = [];
+            }
+            
+            // Reset selected content when platform changes
+            selectedCaption = null;
+            selectedVideo = null;
+            updateCanvas();
+        });
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            
+            if (modalId === 'captionModal') {
+                populateCaptionGallery();
+            } else if (modalId === 'hooksModal' || modalId === 'shortVideosModal' || modalId === 'clipsWithSubtitlesModal') {
+                populateVideoGallery(modalId);
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function populateCaptionGallery() {
+            const gallery = document.getElementById('captionGallery');
+            gallery.innerHTML = '';
+            
+            console.log('Populating gallery with captions:', captions);
+            
+            if (captions.length === 0) {
+                gallery.innerHTML = '<p style="text-align: center; color: #666; grid-column: 1/-1;">No captions available for selected platform. Try refreshing the content!</p>';
+                return;
+            }
+            
+            captions.forEach(caption => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item caption-item';
+                item.innerHTML = `
+                    <h4>${caption.heading}</h4>
+                    <div class="content">${caption.content}</div>
+                    ${caption.hashtags ? `<div class="hashtags">${caption.hashtags}</div>` : ''}
+                    <button class="select-btn" onclick="selectCaption(${caption.id})">Select Caption</button>
+                `;  
+                gallery.appendChild(item);
+            });
+        }
+
+        function populateVideoGallery(galleryType) {
+            const galleryId = galleryType === 'hooksModal' ? 'hooksGallery' : 
+                            galleryType === 'shortVideosModal' ? 'shortVideosGallery' : 
+                            'clipsWithSubtitlesGallery';
+            const gallery = document.getElementById(galleryId);
+            gallery.innerHTML = '';
+            
+            // Get the appropriate video array
+            const videos = galleryType === 'hooksModal' ? hooksVideos : 
+                        galleryType === 'shortVideosModal' ? clipsVideos : 
+                        clipsWithSubtitlesVideos;
+            const videoTypeName = galleryType === 'hooksModal' ? 'hooks' : 
+                                galleryType === 'shortVideosModal' ? 'short clips' : 
+                                'clips with subtitles';
+            
+            // Check if videos are available
+            if (videos.length === 0) {
+                gallery.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <h3>No ${videoTypeName} available</h3>
+                        <p>No videos found in the ${videoTypeName} folder.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Populate videos
+            videos.forEach(video => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item video-item';
+                item.innerHTML = `
+                    <div style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        border-radius: 16px;
+                        padding: 16px;
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        max-width: 500px;
+                        margin: 30px auto;
+                    ">
+                        <video controls style="width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);">
+                            <source src="${video.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                   
+                    <button class="select-btn" onclick="selectVideo(${video.id}, '${galleryType}', '${galleryType === 'hooksModal' ? 'hooks' : galleryType === 'shortVideosModal' ? 'clips' : 'clips_with_subtitles'}')">Select Video</button>
+                `;
+                gallery.appendChild(item);
+            });
+        }
+
+
+        function selectCaption(captionId) {
+            // Remove previous selection styling
+            document.querySelectorAll('.caption-item .select-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                btn.textContent = 'Select Caption';
+            });
+            
+            // Add selection styling to current button
+            event.target.classList.add('selected');
+            event.target.textContent = 'Selected ✓';
+            
+            selectedCaption = captions.find(c => c.id === captionId);
+            console.log('Selected caption:', selectedCaption);
+            updateCanvas();
+            closeModal('captionModal');
+        }
+
+        function selectVideo(videoId, modalType, videoType) {
+            // Remove previous selection styling from all video buttons
+            document.querySelectorAll('.video-item .select-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                btn.textContent = 'Select Video';
+            });
+            
+            // Add selection styling to current button
+            event.target.classList.add('selected');
+            event.target.textContent = 'Selected ✓';
+            
+            // Get the selected video from the appropriate array
+            const videos = videoType === 'hooks' ? hooksVideos : 
+                        videoType === 'clips' ? clipsVideos : 
+                        clipsWithSubtitlesVideos;
+            selectedVideo = videos.find(v => v.id === videoId);
+            
+            console.log('Selected video:', selectedVideo);
+            updateCanvas();
+            closeModal(modalType);
+        }
+
+
+        function updateCanvas() {
+            const captionDiv = document.getElementById('selectedCaption');
+            const videoDiv = document.getElementById('selectedVideo');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Clear previous content
+            captionDiv.innerHTML = '';
+            videoDiv.innerHTML = '';
+            
+            let hasContent = false;
+            
+            if (selectedCaption) {
+                hasContent = true;
+                captionDiv.innerHTML = `
+                    <div class="canvas-caption">
+  <h4 contenteditable="true">${selectedCaption.heading}</h4>
+  <div class="content" contenteditable="true">${selectedCaption.content}</div>
+  ${selectedCaption.hashtags ? `<div class="hashtags" contenteditable="true">${selectedCaption.hashtags}</div>` : ''}
+</div>
+
+                `;
+            }
+            
+            if (selectedVideo) {
+                hasContent = true;
+                videoDiv.innerHTML = `
+                    <div class="canvas-video">
+                        <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; padding: 16px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); margin-bottom: 10px;">
+                            <video controls style="width: 100%; height: 600px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);">
+                                <source src="${selectedVideo.url}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                      
+                    </div>
+                `;
+            }
+            
+            emptyState.style.display = hasContent ? 'none' : 'block';
+        }
+
+
+        // Platform sharing functions
+        function shareToThreads() {
+            if (selectedCaption) {
+                const content = `${selectedCaption.content} ${selectedCaption.hashtags}`.trim();
+                alert(`Sharing to Threads:\n\n${content}`);
+                // In real implementation: window.open(`https://threads.net/intent/post?text=${encodeURIComponent(content)}`);
+            } else {
+                alert('Please select content to share!');
+            }
+        }
+
+        function shareToLinkedIn() {
+            if (selectedCaption) {
+                const content = `${selectedCaption.content} ${selectedCaption.hashtags}`.trim();
+                alert(`Sharing to LinkedIn:\n\n${content}`);
+                // In real implementation: window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(selectedCaption.heading)}&summary=${encodeURIComponent(content)}`);
+            } else {
+                alert('Please select content to share!');
+            }
+        }
+
+        function shareToTikTok() {
+            alert('TikTok sharing - Content ready for video creation!');
+        }
+
+        function shareToFacebook() {
+            if (selectedCaption) {
+                const content = `${selectedCaption.content} ${selectedCaption.hashtags}`.trim();
+                alert(`Sharing to Facebook:\n\n${content}`);
+            } else {
+                alert('Please select content to share!');
+            }
+        }
+
+        function shareToYouTube() {
+            alert('YouTube sharing - Content ready for video description!');
+        }
+
+        function shareToInstagram() {
+            if (selectedCaption) {
+                const content = `${selectedCaption.content} ${selectedCaption.hashtags}`.trim();
+                alert(`Sharing to Instagram:\n\n${content}`);
+            } else {
+                alert('Please select content to share!');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContentData();
+        });
+    </script>
+</body>
+</html>
+{% endblock content %}

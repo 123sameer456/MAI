@@ -1,0 +1,1324 @@
+{% extends "base.html" %}
+{% block title %}Voice Creator - ClipCraft Pro{% endblock title %}
+
+
+
+
+{% block style %}
+
+<style>
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #10b981;
+    --dark: #111827;
+    --darker: #0f172a;
+    --light: #f9fafb;
+    --gray: #9ca3af;
+    --card-bg: #3f4145;
+    --highlight: #8b5cf6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark);
+    color: var(--light);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+
+/* Section Title */
+.section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #e3e3e3;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+/* Form Card */
+.form-card {
+    background-color: #233253;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.form-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 188, 212, 0.15);
+}
+
+/* Labels, Inputs & Textareas */
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #ccc;
+}
+
+.input,
+.textarea,
+.language-select,
+.select-trigger {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: linear-gradient(135deg,#a8bbd8, #8fbedd);
+    color: #000000;
+    font-size: 1rem;
+}
+
+.textarea {
+    resize: vertical;
+    height: 120px;
+        background-color: linear-gradient(135deg,#a8bbd8, #8fbedd);
+
+}
+
+/* Buttons */
+.btn {
+    background-color: #696a85;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #015677;
+}
+
+.btn-secondary {
+    background-color: #555;
+}
+
+.btn-secondary:hover {
+    background-color: #777;
+}
+
+.download-btn {
+    background-color: #4caf50;
+    text-decoration: none;
+    text-align: center;
+}
+
+.download-btn:hover {
+    background-color: #43a047;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+/* Result Section */
+.result-section {
+    background-color: #1c1c1c;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 2rem 0;
+}
+
+.audio-info {
+    color: #ccc;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+/* Waveform & Audio Player */
+.waveform {
+    margin: 1rem 0;
+    border-radius: 12px;
+    background: #1e1e1e;
+    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.audio-player {
+    width: 100%;
+    height: 60px;
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: inset 0 0 6px #00000066;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Voice Card Grid */
+.voice-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.voice-card {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.voice-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 188, 212, 0.2);
+}
+
+.voice-thumbnail {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    background-color: #2a2a2a;
+    margin-bottom: 10px;
+}
+
+.voice-name {
+    font-size: 1rem;
+    color: #00bcd4;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+/* Custom Dropdown */
+.custom-select {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+    z-index: 999;
+    margin-top: 4px;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: #0f0f0f;
+    
+}
+
+.option:last-child {
+    border-bottom: none;
+}
+
+.option:hover {
+        background-color: linear-gradient(135deg, #6b73ff, #206671);
+
+    
+}
+
+.option-checkbox {
+    margin-right: 10px;
+}
+
+.play-btn {
+    background: none;
+    border: none;
+    color: #00bcd4;
+    cursor: pointer;
+    font-size: 1rem;
+    padding-left: 10px;
+}
+
+/* Processing Overlay */
+.processing-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-direction: column;
+    color: white;
+}
+
+.spinner {
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #00bcd4;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 2rem 0;
+}
+</style>
+
+
+<style>
+    /* update css */
+ .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+     .header {
+            background:linear-gradient(135deg, #6b73ff, #206671);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .tab-container {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            background: white;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .tab-icon {
+            font-size: 1.2rem;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.1rem;
+        }
+
+        .input, .textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg,#a8bbd8, #8fbedd);
+        }
+
+        .input:focus, .textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            background: linear-gradient(135deg,#a8bbd8, #8fbedd);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 25px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+
+        .recording-status {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .recording-status.active {
+            display: block;
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .tab-button {
+                padding: 15px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+</style>
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="container">
+        <div class="header">
+            <h2 class="section-title">🎙️ Voice Creation Studio</h2>
+            <p class="subtitle">Create, record, and generate voices with ease</p>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab-button active" data-tab="upload">
+                <span class="tab-icon">📁</span>
+                Upload Voice
+            </button>
+            <button class="tab-button" data-tab="record">
+                <span class="tab-icon">🎤</span>
+                Record Voice
+            </button>
+            <button class="tab-button" data-tab="text">
+                <span class="tab-icon">📝</span>
+                Text to Voice
+            </button>
+        </div>
+
+        <!-- Upload Voice Tab -->
+        <div class="tab-content active" id="upload">
+            <form method="POST" enctype="multipart/form-data" class="form-card">
+                <input type="hidden" name="action" value="upload">
+                
+                <div class="file-upload-area" id="uploadArea">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Drop your voice file here or click to browse</div>
+                    <div class="upload-subtext">Supports MP3, WAV, M4A and other audio formats</div>
+                </div>
+                
+                <input type="file" name="uploaded_audio" accept="audio/*" required class="input" id="fileInput" style="display: none;">
+                <div id="fileName" style="margin-bottom: 20px; color: #667eea; font-weight: 600;"></div>
+                
+                <button type="submit" class="btn" id="uploadBtn" disabled>
+                    🚀 Upload Voice File
+                </button>
+            </form>
+        </div>
+
+        <!-- Record Voice Tab -->
+        <div class="tab-content" id="record">
+            <form id="recordForm" method="POST" enctype="multipart/form-data" class="form-card">
+                <input type="hidden" name="action" value="record">
+                
+                <label class="label">🎙️ Record Your Voice:</label>
+                
+                <div class="recording-status" id="recordingStatus">
+                    <span class="pulse"></span>
+                    Recording in progress... Speak clearly into your microphone
+                </div>
+                
+                <div class="btn-group">
+                    <button type="button" id="startBtn" class="btn">
+                        ▶️ Start Recording
+                    </button>
+                    <button type="button" id="stopBtn" disabled class="btn btn-secondary">
+                        ⏹️ Stop Recording
+                    </button>
+                </div>
+                
+                <input type="file" id="recorded_audio" name="recorded_audio" hidden>
+                <button type="submit" id="submitRecord" disabled class="btn">
+                    🎯 Submit Recording
+                </button>
+            </form>
+        </div>
+
+        <!-- Text to Voice Tab -->
+        <div class="tab-content" id="text">
+            <form method="POST" class="form-card">
+                <input type="hidden" name="action" value="text_to_voice">
+                
+                <label class="label">📝 Enter Your Text:</label>
+                <textarea name="text" required class="textarea" placeholder="Type your script here... Make it engaging and expressive!"></textarea>
+
+                <label class="label">🎭 Select Voice Style:</label>
+                <select name="voice" required class="input" id="voiceSelect">
+                    <option value="">Choose a voice style...</option>
+                    <option value="Adam">🔥 Adam (Motivational)</option>
+                    <option value="Charlotte">✨ Charlotte (Inspiring)</option>
+                    <option value="Rachel">⬆️ Rachel (Uplifting)</option>
+                    <option value="Bella">😌 Bella (Sad/Calm)</option>
+                    <option value="Elli">😊 Elli (Happy)</option>
+                    <option value="Fin">⚡ Fin (Energetic)</option>
+                    <option value="Grace">💝 Grace (Emotional)</option>
+                    <option value="Domi">🎉 Domi (Joyful)</option>
+                    <option value="Matthew">😔 Matthew (Melancholic)</option>
+                    <option value="Antoni">👔 Antoni (Professional)</option>
+                </select>
+                
+                <button type="submit" class="btn">
+                    🎵 Generate Voice
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% if result_audio %}
+<div class="result-section">
+    <h3>🔊 Result Audio</h3>
+    <div id="waveform" class="waveform"></div>
+    <div id="audioDuration" class="audio-info" style="color: #ccc; margin-top: 5px;"></div>
+    <button id="playBtn" class="btn">Play / Pause</button> <br/>
+    <!-- Background Sound Selector -->
+    {% if background_sounds %}
+    <form method="POST">
+        <input type="hidden" name="action" value="text_to_voice">
+        <!-- Hidden input to submit selected background sound -->
+        <input type="hidden" name="background_sound" id="selected_background_sound" value="">
+
+        <!-- Custom Dropdown Trigger -->
+        <div class="custom-select" id="bgSoundDropdown">
+            <div class="select-trigger">🎵 Select Background Sound</div>
+            <div class="select-options">
+                <div class="option" data-value="">
+                    <span>-- Select Background Sound --</span>
+                </div>
+               {% for sound in background_sounds %}
+                    <div class="option" data-value="{{ sound }}">
+                        <input type="checkbox" class="option-checkbox">
+                        <span>{{ sound }}</span>
+                        <button type="button" class="play-btn" onclick="playBackgroundSound('{{ sound }}', event)">▶️</button>
+                    
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <audio id="bgSoundPlayer" style="display: none;"></audio>
+    </form>
+    
+    {% endif %}
+
+   <br> <button id="combineSoundBtn" class="btn">Combine With Background Sound</button>
+               {% if clips|length > 0 or clips_with_subtitles|length > 0 or hooks_videos|length > 0 %}
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal">🎬 Show All Video Clips</button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                            <div class="modal-content bg-dark text-white">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="videoModalLabel">🎥 Video Library</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- 🎞️ Clips -->
+                                    {% if clips|length > 0 %}
+                                    <h5>Short Clips</h5>
+                                    <div class="d-flex flex-wrap gap-3 mb-4">
+                                        {% for video in clips %}
+                                            <video src="{{ url_for('static', filename=video.split('static/')[1]) }}" width="300" controls></video>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- 📝 Clips with Subtitles -->
+                                    {% if clips_with_subtitles|length > 0 %}
+                                    <h5>Clips with Subtitles</h5>
+                                    <div class="d-flex flex-wrap gap-3 mb-4">
+                                        {% for video in clips_with_subtitles %}
+                                            <video src="{{ url_for('static', filename=video.split('static/')[1]) }}" width="300" controls></video>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                    <!-- 🎯 Hooks -->
+                                    {% if hooks_videos|length > 0 %}
+                                    <h5>Hooks</h5>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        {% for video in hooks_videos %}
+                                            <video src="{{ url_for('static', filename=video.split('static/')[1]) }}" width="300" controls></video>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+</div>
+{% endif %}
+
+
+
+
+<!-- Store the result audio filename in a variable for JavaScript -->
+{% if result_audio_filename %}
+<script>
+    const resultAudioUrl = "{{ url_for('static', filename='voices/' + result_audio_filename) }}";
+    console.log("Audio URL: ", resultAudioUrl);
+</script>
+{% else %}
+<script>
+    const resultAudioUrl = null;
+</script>
+{% endif %}
+
+<script>
+
+    // wave 
+    document.addEventListener("DOMContentLoaded", function () {
+        const waveformContainer = document.getElementById('waveform');
+        const playBtn = document.getElementById('playBtn');
+
+        if (!waveformContainer || !resultAudioUrl) {
+            console.log("Waveform or audio URL missing");
+            return;
+        }
+
+        // Clean up old instance
+        if (window.waveSurferInstance) {
+            window.waveSurferInstance.destroy();
+        }
+
+        // Create new WaveSurfer instance
+        const wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: '#00bcd4',
+            progressColor: '#00e676',
+            backgroundColor: '#121212',
+            height: 80,
+            barWidth: 2,
+            responsive: true,
+        });
+
+        // Register Regions plugin
+        const regionsPlugin = WaveSurfer.Regions.create();
+        wavesurfer.registerPlugin(regionsPlugin);
+
+        window.waveSurferInstance = wavesurfer;
+
+        wavesurfer.load(resultAudioUrl);
+
+        wavesurfer.on('ready', () => {
+            const duration = wavesurfer.getDuration().toFixed(2);
+            const durationElem = document.getElementById('audioDuration');
+            if (durationElem) {
+                durationElem.textContent = `Duration: ${duration}s`;
+            }
+
+            // Add Start Marker Region
+            regionsPlugin.addRegion({
+                id: 'start-marker',
+                start: 0,
+                end: 0.1,
+                color: 'rgba(0, 255, 0, 0.9)',
+                drag: true,
+                resize: false
+            });
+
+            // Add End Marker Region
+            regionsPlugin.addRegion({
+                id: 'end-marker',
+                start: duration - 0.1,
+                end: duration,
+                color: 'rgba(255, 0, 0, 0.9)',
+                drag: true,
+                resize: false
+            });
+        });
+
+        wavesurfer.on('error', (err) => {
+            console.error("WaveSurfer Error:", err);
+        });
+
+        if (playBtn) {
+                playBtn.addEventListener('click', () => {
+                    const startRegion = regionsPlugin.regions.find(r => r.id === 'start-marker');
+                    const endRegion = regionsPlugin.regions.find(r => r.id === 'end-marker');
+
+                    if (!startRegion || !endRegion) return;
+
+                    const startTime = startRegion.start;
+                    const endTime = endRegion.end;
+
+                    if (wavesurfer.isPlaying()) {
+                        wavesurfer.pause();
+                    } else {
+                        wavesurfer.play(startTime, endTime);
+                    }
+                });
+            }
+
+
+    });
+</script>
+
+
+<script>
+    // Background sounds management
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdown = document.getElementById('bgSoundDropdown');
+        const optionsContainer = dropdown ? dropdown.querySelector('.select-options') : null;
+        const trigger = dropdown ? dropdown.querySelector('.select-trigger') : null;
+        const selectedInput = document.getElementById('selected_background_sound');
+        const bgPlayer = document.getElementById('bgSoundPlayer');
+
+        let currentPlayingAudio = null;
+        let currentPlayingButton = null;
+
+        // Toggle dropdown visibility
+        if (dropdown && optionsContainer) {
+            dropdown.addEventListener('click', function (e) {
+                if (!dropdown.classList.contains('active')) {
+                    closeAllDropdowns(); // Close others
+                    dropdown.classList.add('active');
+                    optionsContainer.style.display = 'block';
+                } else {
+                    dropdown.classList.remove('active');
+                    optionsContainer.style.display = 'none';
+                }
+            });
+        }
+
+        // Handle option selection
+        if (optionsContainer) {
+            optionsContainer.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function (e) {
+                    // Don't close when clicking checkboxes or play buttons
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') {
+                        e.stopPropagation();
+                        return;
+                    }
+                    
+                    const value = this.getAttribute('data-value');
+                    if (trigger) {
+                        trigger.textContent = value || '🎵 Select Background Sound';
+                    }
+                    if (selectedInput) {
+                        selectedInput.value = value;
+                    }
+                    
+                    // Don't close dropdown when selecting
+                    e.stopPropagation();
+                });
+            });
+        }
+       
+        // Play/Pause background sound preview
+        window.playBackgroundSound = function(soundFilename, event) {
+            event.stopPropagation();
+
+            const path = "{{ url_for('static', filename='background_sound_effects/') }}" + soundFilename;
+            if (!bgPlayer) return;
+
+            if (currentPlayingAudio === soundFilename) {
+                if (!bgPlayer.paused) {
+                    bgPlayer.pause();
+                    currentPlayingButton.textContent = "▶️";
+                } else {
+                    bgPlayer.currentTime = 0;
+                    bgPlayer.play();
+                    currentPlayingButton.textContent = "⏸️";
+                }
+            } else {
+                bgPlayer.src = path;
+                bgPlayer.play();
+                if (currentPlayingButton) {
+                    currentPlayingButton.textContent = "▶️";
+                }
+                currentPlayingButton = event.currentTarget;
+                currentPlayingButton.textContent = "⏸️";
+                currentPlayingAudio = soundFilename;
+            }
+        };
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+                if (optionsContainer) {
+                    optionsContainer.style.display = 'none';
+                }
+            }
+        });
+
+        // Utility: close all open dropdowns
+        function closeAllDropdowns() {
+            document.querySelectorAll('.custom-select').forEach(dd => {
+                dd.classList.remove('active');
+                const opts = dd.querySelector('.select-options');
+                if (opts) opts.style.display = 'none';
+            });
+        }
+    });
+</script>
+
+<script>
+    // Voice Recording Logic
+    document.addEventListener("DOMContentLoaded", function () {
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const submitRecord = document.getElementById('submitRecord');
+        const recordedAudioInput = document.getElementById('recorded_audio');
+
+        let mediaRecorder;
+        let audioChunks = [];
+
+        if (!startBtn || !stopBtn || !submitRecord || !recordedAudioInput) {
+            console.warn("Recording elements not found");
+            return;
+        }
+
+        // Start recording
+        startBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const file = new File([blob], "recorded_voice.webm", { type: 'audio/webm' });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    recordedAudioInput.files = dataTransfer.files;
+
+                    submitRecord.disabled = false;
+
+                    // Reset button styles
+                    startBtn.textContent = "Start Recording";
+                    startBtn.classList.remove("btn-danger");
+                    startBtn.classList.add("btn");
+                };
+
+                audioChunks = [];
+                mediaRecorder.start();
+
+                // Update UI: indicate recording
+                startBtn.textContent = "Recording...";
+                startBtn.classList.remove("btn");
+                startBtn.classList.add("btn-danger");
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+
+            } catch (err) {
+                alert("Microphone access denied or not supported.");
+                console.error(err);
+            }
+        });
+
+        // Stop recording
+        stopBtn.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+
+                // Update UI
+                stopBtn.disabled = true;
+                startBtn.disabled = false;
+            }
+        });
+
+        // Submit form
+        submitRecord.addEventListener('click', () => {
+            if (recordedAudioInput.files.length > 0) {
+                document.getElementById('recordForm').submit();
+            } else {
+                alert("No audio recorded yet.");
+            }
+        });
+    });
+</script>
+
+
+<script>
+    // mixture ( combine button )
+// Add this code to your existing JavaScript section
+
+document.addEventListener("DOMContentLoaded", function () {
+    const combineSoundBtn = document.getElementById('combineSoundBtn');
+    
+    if (combineSoundBtn) {
+        combineSoundBtn.addEventListener('click', function() {
+            // Get selected background sounds from checkboxes
+            const selectedSounds = [];
+            document.querySelectorAll('.option-checkbox:checked').forEach(checkbox => {
+                const soundName = checkbox.closest('.option').getAttribute('data-value');
+                if (soundName) {
+                    selectedSounds.push(soundName);
+                }
+            });
+            
+            if (selectedSounds.length === 0) {
+                alert("Please select at least one background sound");
+                return;
+            }
+            
+            // Get the wavesurfer instance
+            const wavesurfer = window.waveSurferInstance;
+            if (!wavesurfer) {
+                alert("Audio player not initialized");
+                return;
+            }
+            
+            // Get markers positions
+            const regionsPlugin = wavesurfer.plugins.find(p => p instanceof WaveSurfer.Regions);
+            if (!regionsPlugin) {
+                alert("Regions plugin not found");
+                return;
+            }
+            
+            const regions = regionsPlugin.regions || [];
+            const startMarker = regions.find(r => r.id === 'start-marker');
+            const endMarker = regions.find(r => r.id === 'end-marker');
+            
+            if (!startMarker || !endMarker) {
+                alert("Start or end markers not found");
+                return;
+            }
+            
+            const startTime = startMarker.start;
+            const endTime = endMarker.end;
+            
+            // Show loading state
+            combineSoundBtn.disabled = true;
+            combineSoundBtn.textContent = "Processing...";
+            
+            // Create a processing overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'processing-overlay';
+            overlay.innerHTML = `
+                <div class="spinner"></div>
+                <p>Processing audio files...</p>
+            `;
+            document.body.appendChild(overlay);
+            
+            // Debug log
+            console.log("Sending combine request:", {
+                voice_filename: resultAudioUrl.split('/').pop(),
+                background_sounds: selectedSounds,
+                start_time: startTime,
+                end_time: endTime
+            });
+            
+            // Send request to the server
+            fetch('/combine_audio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    voice_filename: resultAudioUrl,  // Send full URL path
+                    background_sounds: selectedSounds,
+                    start_time: startTime,
+                    end_time: endTime,
+                    voice_volume: 9,
+                    music_volume: -6
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Server error: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Display the combined audio
+                    displayCombinedAudio(data.output_file);
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error combining audio: " + error.message);
+            })
+            .finally(() => {
+                // Reset button state
+                combineSoundBtn.disabled = false;
+                combineSoundBtn.textContent = "Combine With Background Sound";
+                // Remove overlay
+                document.body.removeChild(overlay);
+            });
+        });
+    }
+    
+    // Function to display the combined audio
+    function displayCombinedAudio(outputFile) {
+        // Create container for combined audio
+        const combinedContainer = document.createElement('div');
+        combinedContainer.className = 'result-section';
+        combinedContainer.innerHTML = `
+            <h3>🎵 Combined Audio</h3>
+            <div id="combinedWaveform" class="waveform"></div>
+            <div class="audio-controls">
+                <button id="playCombinedBtn" class="btn">Play / Pause</button>
+                <a href="/download/${outputFile}" class="btn download-btn">Download</a>
+            </div>
+        `;
+        
+        // Add to page
+        const resultSection = document.querySelector('.result-section');
+        resultSection.parentNode.insertBefore(combinedContainer, resultSection.nextSibling);
+        
+        // Create waveform for combined audio
+        const combinedWavesurfer = WaveSurfer.create({
+            container: '#combinedWaveform',
+            waveColor: '#4caf50',
+            progressColor: '#8bc34a',
+            backgroundColor: '#121212',
+            height: 80,
+            barWidth: 2,
+            responsive: true,
+        });
+        
+        // Load the combined audio
+        combinedWavesurfer.load(`/static/combined/${outputFile}`);
+        
+        // Add play button functionality
+        document.getElementById('playCombinedBtn').addEventListener('click', () => {
+            if (combinedWavesurfer.isPlaying()) {
+                combinedWavesurfer.pause();
+            } else {
+                combinedWavesurfer.play();
+            }
+        });
+    }
+});
+
+</script>
+
+
+ <script>
+    // 
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // File upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                updateFileName(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                updateFileName(e.target.files[0]);
+            }
+        });
+
+        function updateFileName(file) {
+            fileName.textContent = `Selected: ${file.name}`;
+            uploadBtn.disabled = false;
+        }
+
+        // Recording functionality
+        let mediaRecorder;
+        let recordedChunks = [];
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const submitRecord = document.getElementById('submitRecord');
+        const recordingStatus = document.getElementById('recordingStatus');
+
+        startBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                recordedChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordedChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+                    const file = new File([blob], 'recorded_audio.wav', { type: 'audio/wav' });
+                    
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    document.getElementById('recorded_audio').files = dataTransfer.files;
+                    
+                    submitRecord.disabled = false;
+                    recordingStatus.classList.remove('active');
+                };
+
+                mediaRecorder.start();
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                recordingStatus.classList.add('active');
+            } catch (error) {
+                alert('Error accessing microphone: ' + error.message);
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        });
+
+        // Voice style selection enhancement
+        const voiceSelect = document.getElementById('voiceSelect');
+        voiceSelect.addEventListener('change', () => {
+            if (voiceSelect.value) {
+                voiceSelect.style.background = 'rgba(102, 126, 234, 0.1)';
+            } else {
+                voiceSelect.style.background = '';
+            }
+        });
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}
