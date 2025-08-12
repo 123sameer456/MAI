@@ -17,3 +17,5 @@ try:
     print(f"[TEST] audioop is working. RMS value: {rms_value}")
 except Exception as e:
     print(f"[TEST] audioop failed: {e}")
+
+print("sheke")
