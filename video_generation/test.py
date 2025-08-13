@@ -1,21 +1,51 @@
-# pyaudioop.py - Compatibility shim
-import audioop
-import sys
 
-# Make audioop available as pyaudioop
-sys.modules['pyaudioop'] = audioop
+from openai import OpenAI
+import openai
+
+from system_messages  import sp_title_description_bot
+# client ki ha
+# client = openai.OpenAI(api_key="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")
 
 
-# At the top of your files that use pydub
-import pyaudioop  # This loads our compatibility shim
-from pydub import AudioSegment
+client = openai.OpenAI(api_key="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")
 
-# Test to verify audioop works
-try:
-    test_data = b'\x00\x01\x02\x03'  # dummy audio bytes
-    rms_value = audioop.rms(test_data, 1)  # width=1 byte
-    print(f"[TEST] audioop is working. RMS value: {rms_value}")
-except Exception as e:
-    print(f"[TEST] audioop failed: {e}")
+sm_blog_writing = """You are an expert SEO content writer. When given a topic, generate a complete blog post optimized for search engines.
 
-print("sheke")
+Use a clear structure with HTML tags: <h1> for the main title, <h2> for main sections, <h3> for subsections, and <p> for paragraphs.
+
+Identify and target the main keyword from the topic provided. Maintain an optimal keyword density (around 1–2%) without keyword stuffing.
+
+Ensure the content is 100% unique, relevant, and engaging for human readers.
+
+Include an SEO-friendly meta title (60 characters max) and meta description (160 characters max) at the top.
+
+Write naturally, but strategically place the main keyword in the title, first paragraph, subheadings, and conclusion.
+
+Use secondary keywords related to the topic for better ranking.
+
+Ensure headings and content fully align with the topic and search intent."""
+
+def title_description_bot(topic_name , sm_blog_writing= sm_blog_writing):
+
+   
+    prompt = f"""
+    {sm_blog_writing} . 
+    
+    HERE is the topic name :
+    {topic_name}
+    """
+    
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "system", "content": prompt}]
+                        )
+        
+        # Extract the raw response content
+    response_content = response.choices[0].message.content
+        
+        # Debugging: Print raw response for inspection
+        
+    return response_content
+
+
+print(title_description_bot(topic_name="Newtons laws of motion"))
