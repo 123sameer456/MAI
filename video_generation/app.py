@@ -499,7 +499,7 @@ def get_videos(video_type):
     Fetch video files from the specified folders
     video_type: 'hooks' or 'clips'
     """
-    base_path = '/home/master/applications/pffdwzzskr/public_html/smcg-data/static'
+    base_path = '/home/sameer/Desktop/MAI/MAI/video_generation/static'
     
     if video_type == 'hooks':
         folder_path = os.path.join(base_path, 'hooks')
