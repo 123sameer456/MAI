@@ -52,7 +52,7 @@ for clip in created_clips:
 
 # ====================================================================================
 
-# final_clips = process_hooks_with_voice(hooks_bots_var, "v.mp4", voice="Charlotte", api_key="sk_ba17a4a161f1a8379a2c613267f62c166e04ada6552be809")
+# final_clips = process_hooks_with_voice(hooks_bots_var, "v.mp4", voice="Charlotte", api_key="ELEVENLABS_API_KEY")
 
 # # I want to see the output of below print statement:
 # print(f"\nCreated {len(final_clips)} hook video clips with voice:")

@@ -3,7 +3,7 @@ from elevenlabs import play, save
 import os
 
 # ElevenLabs client
-client = ElevenLabs(api_key="sk_ba17a4a161f1a8379a2c613267f62c166e04ada6552be809")
+client = ElevenLabs(api_key="ELEVENLABS_API_KEY")  # Replace with your actual ElevenLabs API key
 
 # Create folder for outputs if it doesn't exist
 output_dir = "eleven_voices"

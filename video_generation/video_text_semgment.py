@@ -6,7 +6,7 @@ import openai
 import os
 
 
-client = openai.OpenAI(api_key="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")
+client = openai.OpenAI(api_key="OPENAI_API_KEY")  # Replace with your actual OpenAI API key
 
 
 
@@ -22,7 +22,7 @@ def extract_video_text_segment(video_path):
         video.audio.write_audiofile(audio_path, verbose=False, logger=None)
         
         # Initialize OpenAI client
-        
+        # client = openai.OpenAI(api_key="OPENAI_API_KEY")  # Replace with your actual OpenAI API key
         # Open the audio file and transcribe with sentence-level timestamps
         with open(audio_path, "rb") as audio_file:
             response = client.audio.transcriptions.create(

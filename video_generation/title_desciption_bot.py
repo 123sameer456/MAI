@@ -2,11 +2,9 @@ from openai import OpenAI
 import openai
 
 from system_messages  import sp_title_description_bot
-# client ki ha
-# client = openai.OpenAI(api_key="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")
 
 
-client = openai.OpenAI(api_key="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")
+client = openai.OpenAI(api_key="OPENAI_API_KEY")  # Replace with your actual OpenAI API key
 
 
 def title_description_bot(short_clips_text , sp_title_description_bot):
@@ -38,7 +36,7 @@ def title_description_bot(short_clips_text , sp_title_description_bot):
 
 # from system_messages  import sp_title_description_bot
 
-# client = openai.OpenAI(api_key="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")
+# client = openai.OpenAI(api_key="OPENAI_API_KEY")  # Replace with your actual OpenAI API key
 
 
 # short_clips = """[

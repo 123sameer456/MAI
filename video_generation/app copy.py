@@ -32,7 +32,7 @@ app.config['UPLOAD_FOLDER'] = 'static/voices'
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # ElevenLabs client
-client = ElevenLabs(api_key="sk_ba17a4a161f1a8379a2c613267f62c166e04ada6552be809")
+client = ElevenLabs(api_key="YOUR_ELEVENLABS_API_KEY")  # Replace with your actual API key
 
 
 import os
